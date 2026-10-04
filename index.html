@@ -1,0 +1,1658 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Exploradores de las Potencias</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #f8fafc;
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .tab-button.active {
+      color: #4f46e5;
+      background: #eef2ff;
+      border-bottom: 3px solid #4f46e5;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .card-hover {
+      transition: all 0.25s ease;
+    }
+
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    .answer-btn {
+      transition: all 0.2s ease;
+    }
+
+    .answer-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .correct {
+      background: #dcfce7 !important;
+      border-color: #22c55e !important;
+      color: #166534 !important;
+    }
+
+    .incorrect {
+      background: #fee2e2 !important;
+      border-color: #ef4444 !important;
+      color: #991b1b !important;
+    }
+
+    .pulse {
+      animation: pulse 0.5s ease;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+      100% { transform: scale(1); }
+    }
+
+    .number-box {
+      min-width: 42px;
+      height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      background: #eef2ff;
+      color: #4338ca;
+      font-weight: 700;
+      margin: 3px;
+    }
+
+    input[type="range"] {
+      accent-color: #4f46e5;
+    }
+  </style>
+</head>
+
+<body class="text-slate-800">
+
+  <!-- HEADER -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-lg">
+            <i data-lucide="calculator"></i>
+          </div>
+
+          <div>
+            <h1 class="text-xl md:text-2xl font-extrabold text-slate-900">
+              Exploradores de las Potencias
+            </h1>
+
+            <p class="text-sm text-slate-500">
+              Matemáticas • Números naturales
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 text-sm">
+          <span class="px-3 py-2 bg-indigo-50 text-indigo-700 rounded-full font-semibold">
+            PIE Interactivo
+          </span>
+        </div>
+
+      </div>
+
+      <!-- NAV -->
+      <nav class="mt-5 overflow-x-auto">
+        <div class="flex gap-1 min-w-max">
+
+          <button class="tab-button active px-4 py-3 rounded-t-xl font-semibold text-sm"
+                  onclick="openTab('fundamentos', this)">
+            <i data-lucide="book-open" class="inline w-4 h-4 mr-1"></i>
+            Fundamentos
+          </button>
+
+          <button class="tab-button px-4 py-3 rounded-t-xl font-semibold text-sm"
+                  onclick="openTab('entorno', this)">
+            <i data-lucide="map-pin" class="inline w-4 h-4 mr-1"></i>
+            En el Entorno
+          </button>
+
+          <button class="tab-button px-4 py-3 rounded-t-xl font-semibold text-sm"
+                  onclick="openTab('laboratorio', this)">
+            <i data-lucide="flask-conical" class="inline w-4 h-4 mr-1"></i>
+            Laboratorio
+          </button>
+
+          <button class="tab-button px-4 py-3 rounded-t-xl font-semibold text-sm"
+                  onclick="openTab('practica', this)">
+            <i data-lucide="target" class="inline w-4 h-4 mr-1"></i>
+            Práctica Rápida
+          </button>
+
+          <button class="tab-button px-4 py-3 rounded-t-xl font-semibold text-sm"
+                  onclick="openTab('quiz', this)">
+            <i data-lucide="clipboard-check" class="inline w-4 h-4 mr-1"></i>
+            Quiz
+          </button>
+
+        </div>
+      </nav>
+
+    </div>
+  </header>
+
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+
+    <!-- ===================================================== -->
+    <!-- FUNDAMENTOS -->
+    <!-- ===================================================== -->
+
+    <section id="fundamentos" class="tab-content active">
+
+      <div class="bg-gradient-to-br from-indigo-600 to-blue-600 rounded-3xl p-6 md:p-10 text-white shadow-xl mb-8">
+
+        <div class="max-w-3xl">
+
+          <span class="inline-block bg-white/15 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+            🌟 ¡Comencemos!
+          </span>
+
+          <h2 class="text-3xl md:text-5xl font-extrabold leading-tight">
+            Potencias con números naturales
+          </h2>
+
+          <p class="mt-4 text-indigo-100 text-base md:text-lg leading-relaxed">
+            Aprende a reconocer la <strong>base</strong> y el <strong>exponente</strong>,
+            comprender qué significa una potencia y resolverla paso a paso.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- DEFINICIÓN -->
+
+      <div class="grid md:grid-cols-3 gap-5 mb-8">
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 card-hover">
+          <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-4">
+            <i data-lucide="hash"></i>
+          </div>
+
+          <h3 class="font-bold text-lg">Base</h3>
+
+          <p class="text-slate-600 mt-2">
+            Es el número que se multiplica por sí mismo.
+          </p>
+
+          <div class="mono text-3xl font-bold text-indigo-600 mt-4">
+            3
+          </div>
+        </div>
+
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 card-hover">
+          <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mb-4">
+            <i data-lucide="superscript"></i>
+          </div>
+
+          <h3 class="font-bold text-lg">Exponente</h3>
+
+          <p class="text-slate-600 mt-2">
+            Indica cuántas veces se multiplica la base.
+          </p>
+
+          <div class="mono text-3xl font-bold text-blue-600 mt-4">
+            4
+          </div>
+        </div>
+
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 card-hover">
+          <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-4">
+            <i data-lucide="equal"></i>
+          </div>
+
+          <h3 class="font-bold text-lg">Resultado</h3>
+
+          <p class="text-slate-600 mt-2">
+            Es el número que obtenemos después de realizar la multiplicación.
+          </p>
+
+          <div class="mono text-3xl font-bold text-emerald-600 mt-4">
+            81
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- EJEMPLO PRINCIPAL -->
+
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 md:p-8 mb-8">
+
+        <h3 class="text-2xl font-extrabold mb-6">
+          🔎 Observemos una potencia
+        </h3>
+
+        <div class="flex flex-col md:flex-row items-center justify-center gap-8">
+
+          <div class="text-center">
+
+            <div class="mono text-6xl font-bold text-indigo-600">
+              3<sup class="text-3xl">4</sup>
+            </div>
+
+            <p class="text-slate-500 mt-2">
+              Potencia
+            </p>
+
+          </div>
+
+          <div class="text-4xl text-slate-300">
+            =
+          </div>
+
+          <div class="text-center">
+
+            <div class="mono text-3xl font-bold">
+              3 × 3 × 3 × 3
+            </div>
+
+            <p class="text-slate-500 mt-2">
+              Multiplicación repetida
+            </p>
+
+          </div>
+
+          <div class="text-4xl text-slate-300">
+            =
+          </div>
+
+          <div class="text-center">
+
+            <div class="mono text-5xl font-bold text-emerald-600">
+              81
+            </div>
+
+            <p class="text-slate-500 mt-2">
+              Resultado
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="mt-8 grid md:grid-cols-2 gap-4">
+
+          <div class="bg-indigo-50 rounded-2xl p-5">
+            <p class="font-bold text-indigo-700">
+              🟣 Base = 3
+            </p>
+
+            <p class="text-sm text-slate-600 mt-1">
+              El número que se repite en la multiplicación.
+            </p>
+          </div>
+
+          <div class="bg-blue-50 rounded-2xl p-5">
+            <p class="font-bold text-blue-700">
+              🔵 Exponente = 4
+            </p>
+
+            <p class="text-sm text-slate-600 mt-1">
+              Indica que el 3 aparece cuatro veces como factor.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- PASOS -->
+
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 md:p-8 mb-8">
+
+        <h3 class="text-2xl font-extrabold mb-6">
+          🪜 ¿Cómo resolver una potencia?
+        </h3>
+
+        <div class="grid md:grid-cols-4 gap-4">
+
+          <div class="bg-slate-50 rounded-2xl p-5">
+            <span class="text-indigo-600 font-extrabold text-2xl">01</span>
+            <h4 class="font-bold mt-3">Identifica</h4>
+            <p class="text-sm text-slate-600 mt-2">
+              Busca la base y el exponente.
+            </p>
+          </div>
+
+          <div class="bg-slate-50 rounded-2xl p-5">
+            <span class="text-indigo-600 font-extrabold text-2xl">02</span>
+            <h4 class="font-bold mt-3">Repite</h4>
+            <p class="text-sm text-slate-600 mt-2">
+              Escribe la base tantas veces como indique el exponente.
+            </p>
+          </div>
+
+          <div class="bg-slate-50 rounded-2xl p-5">
+            <span class="text-indigo-600 font-extrabold text-2xl">03</span>
+            <h4 class="font-bold mt-3">Multiplica</h4>
+            <p class="text-sm text-slate-600 mt-2">
+              Realiza la multiplicación.
+            </p>
+          </div>
+
+          <div class="bg-slate-50 rounded-2xl p-5">
+            <span class="text-indigo-600 font-extrabold text-2xl">04</span>
+            <h4 class="font-bold mt-3">Comprueba</h4>
+            <p class="text-sm text-slate-600 mt-2">
+              Verifica que tu resultado sea correcto.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- ERRORES -->
+
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 md:p-8">
+
+        <h3 class="text-2xl font-extrabold mb-5">
+          ⚠️ Errores frecuentes
+        </h3>
+
+        <div class="grid md:grid-cols-2 gap-5">
+
+          <div class="border border-red-200 bg-red-50 rounded-2xl p-5">
+
+            <h4 class="font-bold text-red-700">
+              ❌ Error: multiplicar base × exponente
+            </h4>
+
+            <p class="text-sm text-slate-700 mt-2">
+              En 4² no hacemos 4 × 2.
+            </p>
+
+            <p class="mono font-bold mt-3">
+              4² = 4 × 4 = 16
+            </p>
+
+          </div>
+
+
+          <div class="border border-amber-200 bg-amber-50 rounded-2xl p-5">
+
+            <h4 class="font-bold text-amber-700">
+              💡 Recuerda
+            </h4>
+
+            <p class="text-sm text-slate-700 mt-2">
+              El exponente indica cuántas veces aparece la base como factor.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================== -->
+    <!-- EN EL ENTORNO -->
+    <!-- ===================================================== -->
+
+    <section id="entorno" class="tab-content">
+
+      <div class="mb-8">
+
+        <h2 class="text-3xl font-extrabold text-slate-900">
+          Potencias en nuestro entorno 🌎
+        </h2>
+
+        <p class="text-slate-600 mt-2">
+          Haz clic en cada situación para descubrir cómo aparecen las potencias.
+        </p>
+
+      </div>
+
+
+      <div class="grid md:grid-cols-2 gap-5">
+
+        <!-- CARD 1 -->
+
+        <button onclick="toggleScenario('scenario1')"
+                class="text-left bg-white border border-slate-200 rounded-3xl p-6 card-hover">
+
+          <div class="flex items-start justify-between">
+
+            <div>
+              <span class="text-3xl">🧱</span>
+              <h3 class="font-bold text-xl mt-3">
+                Construcción
+              </h3>
+            </div>
+
+            <i data-lucide="chevron-down"></i>
+
+          </div>
+
+          <div id="scenario1" class="hidden mt-5 pt-5 border-t border-slate-200">
+
+            <p class="text-slate-600">
+              Imagina una pared formada por 5 filas con 5 bloques en cada fila.
+            </p>
+
+            <p class="mono text-2xl font-bold text-indigo-600 mt-4">
+              5² = 5 × 5 = 25
+            </p>
+
+            <p class="text-sm text-slate-500 mt-2">
+              Hay 25 bloques en total.
+            </p>
+
+          </div>
+
+        </button>
+
+
+        <!-- CARD 2 -->
+
+        <button onclick="toggleScenario('scenario2')"
+                class="text-left bg-white border border-slate-200 rounded-3xl p-6 card-hover">
+
+          <div class="flex items-start justify-between">
+
+            <div>
+              <span class="text-3xl">🎁</span>
+              <h3 class="font-bold text-xl mt-3">
+                Cajas organizadas
+              </h3>
+            </div>
+
+            <i data-lucide="chevron-down"></i>
+
+          </div>
+
+          <div id="scenario2" class="hidden mt-5 pt-5 border-t border-slate-200">
+
+            <p class="text-slate-600">
+              Una organización puede tener 3 niveles con 3 grupos en cada nivel.
+            </p>
+
+            <p class="mono text-2xl font-bold text-indigo-600 mt-4">
+              3² = 9
+            </p>
+
+            <p class="text-sm text-slate-500 mt-2">
+              La potencia permite representar la multiplicación de manera corta.
+            </p>
+
+          </div>
+
+        </button>
+
+
+        <!-- CARD 3 -->
+
+        <button onclick="toggleScenario('scenario3')"
+                class="text-left bg-white border border-slate-200 rounded-3xl p-6 card-hover">
+
+          <div class="flex items-start justify-between">
+
+            <div>
+              <span class="text-3xl">🌱</span>
+              <h3 class="font-bold text-xl mt-3">
+                Jardines
+              </h3>
+            </div>
+
+            <i data-lucide="chevron-down"></i>
+
+          </div>
+
+          <div id="scenario3" class="hidden mt-5 pt-5 border-t border-slate-200">
+
+            <p class="text-slate-600">
+              Si un jardín tiene 4 filas con 4 plantas en cada fila:
+            </p>
+
+            <p class="mono text-2xl font-bold text-indigo-600 mt-4">
+              4² = 4 × 4 = 16
+            </p>
+
+            <p class="text-sm text-slate-500 mt-2">
+              Podemos representar 16 plantas mediante una potencia.
+            </p>
+
+          </div>
+
+        </button>
+
+
+        <!-- CARD 4 -->
+
+        <button onclick="toggleScenario('scenario4')"
+                class="text-left bg-white border border-slate-200 rounded-3xl p-6 card-hover">
+
+          <div class="flex items-start justify-between">
+
+            <div>
+              <span class="text-3xl">🎮</span>
+              <h3 class="font-bold text-xl mt-3">
+                Videojuegos
+              </h3>
+            </div>
+
+            <i data-lucide="chevron-down"></i>
+
+          </div>
+
+          <div id="scenario4" class="hidden mt-5 pt-5 border-t border-slate-200">
+
+            <p class="text-slate-600">
+              Un juego puede aumentar una cantidad mediante grupos repetidos.
+            </p>
+
+            <p class="mono text-2xl font-bold text-indigo-600 mt-4">
+              2³ = 2 × 2 × 2 = 8
+            </p>
+
+            <p class="text-sm text-slate-500 mt-2">
+              El exponente indica que multiplicamos el 2 tres veces.
+            </p>
+
+          </div>
+
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================== -->
+    <!-- LABORATORIO -->
+    <!-- ===================================================== -->
+
+    <section id="laboratorio" class="tab-content">
+
+      <div class="mb-8">
+
+        <h2 class="text-3xl font-extrabold">
+          Laboratorio de Potencias 🧪
+        </h2>
+
+        <p class="text-slate-600 mt-2">
+          Mueve los controles y observa cómo cambia la potencia en tiempo real.
+        </p>
+
+      </div>
+
+
+      <div class="grid lg:grid-cols-2 gap-6">
+
+        <!-- CONTROLES -->
+
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 md:p-8">
+
+          <h3 class="text-xl font-bold mb-6">
+            Ajusta los valores
+          </h3>
+
+
+          <div class="mb-8">
+
+            <div class="flex justify-between mb-3">
+
+              <label class="font-semibold">
+                Base
+              </label>
+
+              <span id="baseValue"
+                    class="mono font-bold text-indigo-600">
+                3
+              </span>
+
+            </div>
+
+            <input
+              id="baseSlider"
+              type="range"
+              min="1"
+              max="10"
+              value="3"
+              class="w-full"
+              oninput="updateLab()">
+
+            <div class="flex justify-between text-xs text-slate-400 mt-2">
+              <span>1</span>
+              <span>10</span>
+            </div>
+
+          </div>
+
+
+          <div>
+
+            <div class="flex justify-between mb-3">
+
+              <label class="font-semibold">
+                Exponente
+              </label>
+
+              <span id="expValue"
+                    class="mono font-bold text-indigo-600">
+                3
+              </span>
+
+            </div>
+
+            <input
+              id="expSlider"
+              type="range"
+              min="1"
+              max="6"
+              value="3"
+              class="w-full"
+              oninput="updateLab()">
+
+            <div class="flex justify-between text-xs text-slate-400 mt-2">
+              <span>1</span>
+              <span>6</span>
+            </div>
+
+          </div>
+
+
+          <button onclick="randomPower()"
+                  class="mt-8 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold transition">
+            🎲 Generar potencia
+          </button>
+
+        </div>
+
+
+        <!-- RESULTADO -->
+
+        <div class="bg-slate-900 rounded-3xl p-6 md:p-8 text-white">
+
+          <p class="text-slate-400 font-semibold">
+            Potencia actual
+          </p>
+
+          <div id="labExpression"
+               class="mono text-6xl font-bold mt-5 text-center">
+            3³
+          </div>
+
+          <div class="text-center text-slate-500 text-3xl my-4">
+            =
+          </div>
+
+          <div id="labMultiplication"
+               class="mono text-lg text-center text-slate-300">
+            3 × 3 × 3
+          </div>
+
+          <div class="text-center text-slate-500 text-3xl my-4">
+            =
+          </div>
+
+          <div id="labResult"
+               class="mono text-6xl font-bold text-center text-emerald-400">
+            27
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- VISUALIZACIÓN -->
+
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 md:p-8 mt-6">
+
+        <h3 class="font-bold text-xl mb-5">
+          Visualización de los factores
+        </h3>
+
+        <div id="factorVisual"
+             class="flex flex-wrap gap-2">
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================== -->
+    <!-- PRACTICA -->
+    <!-- ===================================================== -->
+
+    <section id="practica" class="tab-content">
+
+      <div class="mb-8">
+
+        <h2 class="text-3xl font-extrabold">
+          Clasificador / Práctica Rápida 🎯
+        </h2>
+
+        <p class="text-slate-600 mt-2">
+          Selecciona la respuesta correcta. ¡Cada acierto suma!
+        </p>
+
+      </div>
+
+
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 md:p-8">
+
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+
+          <div>
+            <p class="text-sm text-slate-500">
+              Progreso
+            </p>
+
+            <div class="w-full md:w-72 bg-slate-100 rounded-full h-3 mt-2">
+              <div id="practiceProgress"
+                   class="bg-indigo-600 h-3 rounded-full"
+                   style="width:0%">
+              </div>
+            </div>
+          </div>
+
+          <div class="text-right">
+            <p class="text-sm text-slate-500">
+              Puntos
+            </p>
+
+            <p id="practiceScore"
+               class="text-2xl font-extrabold text-indigo-600">
+              0
+            </p>
+          </div>
+
+        </div>
+
+
+        <div id="practiceCard"
+             class="bg-slate-50 rounded-3xl p-6 md:p-8">
+
+        </div>
+
+
+        <div class="mt-6 flex justify-end">
+
+          <button id="nextPractice"
+                  onclick="nextPracticeQuestion()"
+                  class="hidden bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-bold">
+            Siguiente →
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================== -->
+    <!-- QUIZ -->
+    <!-- ===================================================== -->
+
+    <section id="quiz" class="tab-content">
+
+      <div class="mb-8">
+
+        <h2 class="text-3xl font-extrabold">
+          Cuestionario de Evaluación 📝
+        </h2>
+
+        <p class="text-slate-600 mt-2">
+          Responde las preguntas y comprueba cuánto aprendiste.
+        </p>
+
+      </div>
+
+
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 md:p-8">
+
+        <div class="flex items-center justify-between mb-8">
+
+          <div>
+            <p class="text-sm text-slate-500">
+              Pregunta
+            </p>
+
+            <p id="quizNumber"
+               class="font-extrabold text-xl">
+              1 de 5
+            </p>
+          </div>
+
+          <div class="text-right">
+
+            <p class="text-sm text-slate-500">
+              Puntaje
+            </p>
+
+            <p id="quizScore"
+               class="font-extrabold text-xl text-indigo-600">
+              0
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div id="quizContainer">
+        </div>
+
+      </div>
+
+
+      <div id="quizFinal"
+           class="hidden mt-6 bg-gradient-to-br from-indigo-600 to-blue-600 rounded-3xl p-8 text-white text-center">
+
+        <div class="text-5xl mb-4">
+          🏆
+        </div>
+
+        <h3 class="text-3xl font-extrabold">
+          ¡Quiz terminado!
+        </h3>
+
+        <p class="mt-3 text-indigo-100">
+          Tu resultado final es:
+        </p>
+
+        <div id="finalScore"
+             class="text-6xl font-extrabold mt-3">
+          0/5
+        </div>
+
+        <p id="finalMessage"
+           class="mt-4 text-lg">
+        </p>
+
+        <button onclick="restartQuiz()"
+                class="mt-6 bg-white text-indigo-700 px-6 py-3 rounded-xl font-bold">
+          Intentar nuevamente
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- FOOTER -->
+
+  <footer class="border-t border-slate-200 bg-white mt-10">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 text-center">
+
+      <p class="text-sm text-slate-500">
+        PIE de Matemáticas • Potencias con números naturales
+      </p>
+
+      <p class="text-xs text-slate-400 mt-1">
+        Aprende, experimenta y practica.
+      </p>
+
+    </div>
+
+  </footer>
+
+
+  <!-- ===================================================== -->
+  <!-- JAVASCRIPT -->
+  <!-- ===================================================== -->
+
+  <script>
+
+    /* ICONOS */
+
+    lucide.createIcons();
+
+
+    /* TABS */
+
+    function openTab(tabId, button) {
+
+      document.querySelectorAll('.tab-content')
+        .forEach(tab => tab.classList.remove('active'));
+
+      document.querySelectorAll('.tab-button')
+        .forEach(btn => btn.classList.remove('active'));
+
+      document.getElementById(tabId)
+        .classList.add('active');
+
+      button.classList.add('active');
+
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+
+
+    /* ESCENARIOS */
+
+    function toggleScenario(id) {
+
+      const element = document.getElementById(id);
+
+      element.classList.toggle('hidden');
+
+    }
+
+
+    /* LABORATORIO */
+
+    function updateLab() {
+
+      const base =
+        Number(document.getElementById('baseSlider').value);
+
+      const exponent =
+        Number(document.getElementById('expSlider').value);
+
+      document.getElementById('baseValue')
+        .textContent = base;
+
+      document.getElementById('expValue')
+        .textContent = exponent;
+
+
+      const result =
+        Math.pow(base, exponent);
+
+
+      document.getElementById('labExpression')
+        .innerHTML =
+        base + '<sup>' + exponent + '</sup>';
+
+
+      const multiplication =
+        Array(exponent)
+        .fill(base)
+        .join(' × ');
+
+
+      document.getElementById('labMultiplication')
+        .textContent = multiplication;
+
+
+      document.getElementById('labResult')
+        .textContent = result;
+
+
+      const visual =
+        document.getElementById('factorVisual');
+
+      visual.innerHTML = '';
+
+
+      for (let i = 0; i < exponent; i++) {
+
+        const box =
+          document.createElement('div');
+
+        box.className =
+          'number-box pulse';
+
+        box.textContent = base;
+
+        visual.appendChild(box);
+      }
+
+    }
+
+
+    function randomPower() {
+
+      const base =
+        Math.floor(Math.random() * 10) + 1;
+
+      const exponent =
+        Math.floor(Math.random() * 6) + 1;
+
+
+      document.getElementById('baseSlider')
+        .value = base;
+
+      document.getElementById('expSlider')
+        .value = exponent;
+
+
+      updateLab();
+
+    }
+
+
+    updateLab();
+
+
+    /* PRACTICA */
+
+    const practiceQuestions = [
+
+      {
+        question: 'En la potencia 4³, ¿cuál es la BASE?',
+        options: ['3', '4', '12', '64'],
+        answer: '4',
+        explanation: 'La base es 4 porque es el número que se multiplica.'
+      },
+
+      {
+        question: 'En la potencia 7², ¿cuál es el EXPONENTE?',
+        options: ['7', '14', '2', '49'],
+        answer: '2',
+        explanation: 'El exponente es 2 porque indica que el 7 se multiplica dos veces.'
+      },
+
+      {
+        question: '¿Cuál es la multiplicación equivalente a 5³?',
+        options: [
+          '5 × 3',
+          '5 × 5 × 5',
+          '3 × 3 × 3',
+          '5 + 5 + 5'
+        ],
+        answer: '5 × 5 × 5',
+        explanation: 'El exponente 3 indica que el 5 aparece tres veces.'
+      },
+
+      {
+        question: '¿Cuál es el resultado de 2⁴?',
+        options: ['6', '8', '16', '24'],
+        answer: '16',
+        explanation: '2⁴ = 2 × 2 × 2 × 2 = 16.'
+      },
+
+      {
+        question: 'En 6², ¿qué número se repite en la multiplicación?',
+        options: ['2', '6', '12', '36'],
+        answer: '6',
+        explanation: 'La base 6 es el número que se repite.'
+      },
+
+      {
+        question: '¿Cuál potencia representa 3 × 3 × 3 × 3?',
+        options: ['3²', '4³', '3⁴', '12³'],
+        answer: '3⁴',
+        explanation: 'El 3 aparece cuatro veces, por eso es 3⁴.'
+      },
+
+      {
+        question: '¿Cuál es el resultado de 5²?',
+        options: ['10', '15', '20', '25'],
+        answer: '25',
+        explanation: '5² = 5 × 5 = 25.'
+      },
+
+      {
+        question: 'En la potencia 8³, ¿cuántas veces aparece el 8 como factor?',
+        options: ['2', '3', '8', '24'],
+        answer: '3',
+        explanation: 'El exponente 3 indica que el 8 aparece tres veces.'
+      }
+
+    ];
+
+
+    let practiceIndex = 0;
+    let practiceScore = 0;
+
+
+    function loadPracticeQuestion() {
+
+      const card =
+        document.getElementById('practiceCard');
+
+      const question =
+        practiceQuestions[practiceIndex];
+
+
+      document.getElementById('nextPractice')
+        .classList.add('hidden');
+
+
+      card.innerHTML = `
+
+        <div class="mb-6">
+
+          <span class="text-sm font-semibold text-indigo-600">
+            Pregunta ${practiceIndex + 1} de ${practiceQuestions.length}
+          </span>
+
+          <h3 class="text-2xl font-extrabold mt-3">
+            ${question.question}
+          </h3>
+
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-3">
+
+          ${question.options.map(option => `
+
+            <button
+              onclick="answerPractice(this, '${escapeQuotes(option)}')"
+              class="answer-btn text-left bg-white border border-slate-200 rounded-xl p-4 font-semibold hover:border-indigo-400">
+
+              ${option}
+
+            </button>
+
+          `).join('')}
+
+        </div>
+
+        <div id="practiceFeedback"
+             class="mt-5 text-sm font-semibold">
+        </div>
+      `;
+
+      updatePracticeProgress();
+
+    }
+
+
+    function escapeQuotes(text) {
+
+      return text
+        .replace(/\\/g, '\\\\')
+        .replace(/'/g, "\\'");
+
+    }
+
+
+    function answerPractice(button, selected) {
+
+      const question =
+        practiceQuestions[practiceIndex];
+
+      const buttons =
+        document.querySelectorAll('#practiceCard .answer-btn');
+
+
+      buttons.forEach(btn => {
+        btn.disabled = true;
+      });
+
+
+      const feedback =
+        document.getElementById('practiceFeedback');
+
+
+      if (selected === question.answer) {
+
+        button.classList.add('correct');
+
+        practiceScore++;
+
+        document.getElementById('practiceScore')
+          .textContent = practiceScore;
+
+        feedback.innerHTML =
+          '✅ ¡Correcto! ' + question.explanation;
+
+        confetti({
+          particleCount: 90,
+          spread: 70,
+          origin: {
+            y: 0.65
+          }
+        });
+
+      } else {
+
+        button.classList.add('incorrect');
+
+        buttons.forEach(btn => {
+
+          if (btn.textContent.trim() === question.answer) {
+            btn.classList.add('correct');
+          }
+
+        });
+
+        feedback.innerHTML =
+          '❌ No es correcto. ' + question.explanation;
+
+      }
+
+
+      document.getElementById('nextPractice')
+        .classList.remove('hidden');
+
+    }
+
+
+    function nextPracticeQuestion() {
+
+      practiceIndex++;
+
+
+      if (practiceIndex >= practiceQuestions.length) {
+
+        document.getElementById('practiceCard').innerHTML = `
+
+          <div class="text-center py-8">
+
+            <div class="text-5xl mb-4">
+              🎉
+            </div>
+
+            <h3 class="text-3xl font-extrabold">
+              ¡Práctica completada!
+            </h3>
+
+            <p class="text-slate-600 mt-3">
+              Obtuviste
+            </p>
+
+            <p class="text-5xl font-extrabold text-indigo-600 mt-2">
+              ${practiceScore}/${practiceQuestions.length}
+            </p>
+
+            <button
+              onclick="restartPractice()"
+              class="mt-6 bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold">
+              Volver a practicar
+            </button>
+
+          </div>
+
+        `;
+
+        document.getElementById('nextPractice')
+          .classList.add('hidden');
+
+        if (practiceScore === practiceQuestions.length) {
+
+          confetti({
+            particleCount: 180,
+            spread: 100,
+            origin: {
+              y: 0.6
+            }
+          });
+
+        }
+
+        return;
+      }
+
+
+      loadPracticeQuestion();
+
+    }
+
+
+    function updatePracticeProgress() {
+
+      const percent =
+        (practiceIndex / practiceQuestions.length) * 100;
+
+      document.getElementById('practiceProgress')
+        .style.width = percent + '%';
+
+    }
+
+
+    function restartPractice() {
+
+      practiceIndex = 0;
+      practiceScore = 0;
+
+      document.getElementById('practiceScore')
+        .textContent = '0';
+
+      loadPracticeQuestion();
+
+    }
+
+
+    loadPracticeQuestion();
+
+
+    /* QUIZ */
+
+    const quizQuestions = [
+
+      {
+        question: 'Una profesora tiene 3 cajas con 3 lápices en cada caja. ¿Qué potencia representa esta situación?',
+        options: ['3²', '2³', '3³', '6²'],
+        answer: '3²',
+        explanation: 'Hay 3 grupos de 3, por eso podemos representar la situación como 3².'
+      },
+
+      {
+        question: '¿Cuál es la base de la potencia 9⁴?',
+        options: ['4', '9', '13', '36'],
+        answer: '9',
+        explanation: 'La base es el número que se multiplica, en este caso 9.'
+      },
+
+      {
+        question: '¿Cuál es el exponente de 5³?',
+        options: ['5', '8', '3', '15'],
+        answer: '3',
+        explanation: 'El exponente es 3 e indica que el 5 aparece tres veces.'
+      },
+
+      {
+        question: 'Una cuadrícula tiene 4 filas y 4 columnas. ¿Qué potencia puede representar la cantidad de espacios?',
+        options: ['4²', '2⁴', '4³', '8²'],
+        answer: '4²',
+        explanation: '4 filas por 4 columnas se representa como 4² = 16.'
+      },
+
+      {
+        question: '¿Cuál es el resultado de 3⁴?',
+        options: ['12', '27', '64', '81'],
+        answer: '81',
+        explanation: '3⁴ = 3 × 3 × 3 × 3 = 81.'
+      }
+
+    ];
+
+
+    let quizIndex = 0;
+    let quizScore = 0;
+
+
+    function loadQuizQuestion() {
+
+      const question =
+        quizQuestions[quizIndex];
+
+
+      document.getElementById('quizNumber')
+        .textContent =
+        `${quizIndex + 1} de ${quizQuestions.length}`;
+
+
+      document.getElementById('quizScore')
+        .textContent = quizScore;
+
+
+      const container =
+        document.getElementById('quizContainer');
+
+
+      container.innerHTML = `
+
+        <div>
+
+          <span class="text-sm font-semibold text-indigo-600">
+            Pregunta ${quizIndex + 1}
+          </span>
+
+          <h3 class="text-2xl font-extrabold mt-3 mb-6">
+            ${question.question}
+          </h3>
+
+          <div class="grid md:grid-cols-2 gap-3">
+
+            ${question.options.map(option => `
+
+              <button
+                onclick="answerQuiz(this, '${escapeQuotes(option)}')"
+                class="answer-btn text-left bg-slate-50 border border-slate-200 rounded-xl p-5 font-semibold">
+
+                ${option}
+
+              </button>
+
+            `).join('')}
+
+          </div>
+
+          <div id="quizFeedback"
+               class="mt-6 text-sm font-semibold">
+          </div>
+
+          <button
+            id="nextQuiz"
+            onclick="nextQuizQuestion()"
+            class="hidden mt-6 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-bold">
+
+            Siguiente →
+
+          </button>
+
+        </div>
+
+      `;
+
+    }
+
+
+    function answerQuiz(button, selected) {
+
+      const question =
+        quizQuestions[quizIndex];
+
+
+      const buttons =
+        document.querySelectorAll('#quizContainer .answer-btn');
+
+
+      buttons.forEach(btn => {
+        btn.disabled = true;
+      });
+
+
+      const feedback =
+        document.getElementById('quizFeedback');
+
+
+      if (selected === question.answer) {
+
+        button.classList.add('correct');
+
+        quizScore++;
+
+        document.getElementById('quizScore')
+          .textContent = quizScore;
+
+        feedback.innerHTML =
+          '✅ ¡Excelente! ' + question.explanation;
+
+        confetti({
+          particleCount: 80,
+          spread: 65,
+          origin: {
+            y: 0.7
+          }
+        });
+
+      } else {
+
+        button.classList.add('incorrect');
+
+        buttons.forEach(btn => {
+
+          if (btn.textContent.trim() === question.answer) {
+            btn.classList.add('correct');
+          }
+
+        });
+
+        feedback.innerHTML =
+          '❌ Revisa tu respuesta. ' + question.explanation;
+
+      }
+
+
+      document.getElementById('nextQuiz')
+        .classList.remove('hidden');
+
+    }
+
+
+    function nextQuizQuestion() {
+
+      quizIndex++;
+
+
+      if (quizIndex >= quizQuestions.length) {
+
+        finishQuiz();
+
+        return;
+
+      }
+
+
+      loadQuizQuestion();
+
+    }
+
+
+    function finishQuiz() {
+
+      document.getElementById('quizContainer')
+        .classList.add('hidden');
+
+
+      document.getElementById('quizFinal')
+        .classList.remove('hidden');
+
+
+      document.getElementById('finalScore')
+        .textContent =
+        `${quizScore}/${quizQuestions.length}`;
+
+
+      let message = '';
+
+
+      if (quizScore === 5) {
+
+        message =
+          '🏆 ¡Excelente! Dominas las potencias.';
+
+      } else if (quizScore >= 4) {
+
+        message =
+          '🌟 ¡Muy bien! Tienes un excelente dominio del tema.';
+
+      } else if (quizScore >= 3) {
+
+        message =
+          '👍 ¡Buen trabajo! Sigue practicando.';
+
+      } else {
+
+        message =
+          '💪 Sigue estudiando. ¡Con práctica lo lograrás!';
+
+      }
+
+
+      document.getElementById('finalMessage')
+        .textContent = message;
+
+
+      if (quizScore >= 4) {
+
+        confetti({
+          particleCount: 200,
+          spread: 110,
+          origin: {
+            y: 0.6
+          }
+        });
+
+      }
+
+    }
+
+
+    function restartQuiz() {
+
+      quizIndex = 0;
+      quizScore = 0;
+
+
+      document.getElementById('quizFinal')
+        .classList.add('hidden');
+
+
+      document.getElementById('quizContainer')
+        .classList.remove('hidden');
+
+
+      loadQuizQuestion();
+
+    }
+
+
+    loadQuizQuestion();
+
+  </script>
+
+</body>
+</html>
